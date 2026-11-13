@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,6 +42,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleUnexpected(Exception ex) {
         log.error("Unexpected error", ex);
         return problem(HttpStatus.INTERNAL_SERVER_ERROR, "Internal error", "Unexpected error occurred", "INTERNAL_ERROR");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDenied(AccessDeniedException ex) {
+        return problem(HttpStatus.FORBIDDEN, "Access denied",
+                "You do not have permission to perform this action", "ACCESS_DENIED");
     }
 
     @Override
